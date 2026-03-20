@@ -1,0 +1,400 @@
+/* ============================================================
+   Reset & base
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --color-bg: #f5f0e8;
+  --color-board: #ffffff;
+  --color-pin-available: #2c2c2c;
+  --color-pin-taken: #ccbbaa;
+  --color-active-bg: #fff8e7;
+  --color-active-border: #e8a000;
+  --color-sticky: #b5cc49;
+  --color-sticky-border: #8fa320;
+  --color-sticky-removed: #e0d8cc;
+  --color-sticky-removed-border: #c8bfb0;
+  --color-btn-pick: #4a90d9;
+  --color-btn-pick-hover: #357abd;
+  --color-btn-pick-disabled: #aac4e0;
+  --color-btn-reset: #d9534f;
+  --color-btn-reset-hover: #c9302c;
+  --color-btn-next: #5cb85c;
+  --color-btn-next-hover: #449d44;
+  --color-text-primary: #1a1a1a;
+  --color-text-muted: #666;
+  --color-win: #2d7a2d;
+  --color-lose: #a02020;
+  --font-hand: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --radius: 6px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, .12);
+}
+
+body {
+  font-family: var(--font-hand);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+
+/* ============================================================
+   App shell
+   ============================================================ */
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.app-header {
+  text-align: center;
+  padding: 1.5rem 0 1rem;
+}
+
+.app-title {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.app-title-ki {
+  color: #e05000;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+
+.app-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ============================================================
+   Main layout: board + panel side by side
+   ============================================================ */
+.app-main {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   Board
+   ============================================================ */
+.board {
+  flex: 0 0 auto;
+  background: var(--color-board);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 280px;
+}
+
+.board-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  transition: background 0.2s;
+}
+
+.board-row--active {
+  background: var(--color-active-bg);
+  border: 2px solid var(--color-active-border);
+}
+
+.board-row--taken {
+  opacity: 0.35;
+}
+
+/* Pin number label */
+.pin-number {
+  width: 28px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: right;
+  color: var(--color-pin-available);
+  flex-shrink: 0;
+}
+
+.board-row--taken .pin-number {
+  color: var(--color-pin-taken);
+  text-decoration: line-through;
+}
+
+/* Sticky notes cluster */
+.sticky-notes {
+  display: flex;
+  gap: 6px;
+}
+
+/* Individual sticky note */
+.sticky {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-radius: 3px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, .15);
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.sticky--present {
+  background: var(--color-sticky);
+  border: 1.5px solid var(--color-sticky-border);
+  color: #1a1a1a;
+}
+
+.sticky--present:hover {
+  transform: rotate(-3deg) scale(1.05);
+}
+
+.sticky--removed {
+  background: var(--color-sticky-removed);
+  border: 1.5px dashed var(--color-sticky-removed-border);
+  color: transparent;
+  box-shadow: none;
+}
+
+.sticky--small {
+  width: 24px;
+  height: 24px;
+  font-size: 0.75rem;
+  display: inline-flex;
+}
+
+/* Pin peg */
+.pin-peg {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #888, #333);
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, .4);
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.pin-peg--taken {
+  background: radial-gradient(circle at 35% 35%, #ccc, #aaa);
+  box-shadow: none;
+}
+
+/* ============================================================
+   Side panel
+   ============================================================ */
+.panel {
+  flex: 1 1 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ---- Status message ---- */
+.message {
+  background: #fff;
+  border-left: 5px solid #4a90d9;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: var(--shadow);
+  min-height: 56px;
+}
+
+.message--win {
+  border-color: var(--color-win);
+  background: #efffef;
+  color: var(--color-win);
+  font-weight: 600;
+}
+
+.message--lose {
+  border-color: var(--color-lose);
+  background: #fff2f2;
+  color: var(--color-lose);
+  font-weight: 600;
+}
+
+/* ---- Remaining indicator ---- */
+.remaining {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+/* ---- AI hint ---- */
+.ai-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  background: #f0f0f0;
+  border-radius: var(--radius);
+  padding: 0.4rem 0.6rem;
+}
+
+/* ---- Pick buttons ---- */
+.pick-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+/* ---- Shared button styles ---- */
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.65rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .15);
+}
+
+.btn:active { transform: translateY(1px); box-shadow: 0 1px 3px rgba(0, 0, 0, .15); }
+
+.btn--pick {
+  background: var(--color-btn-pick);
+  color: #fff;
+  flex: 1;
+}
+.btn--pick:hover:not(:disabled) { background: var(--color-btn-pick-hover); }
+.btn--pick:disabled {
+  background: var(--color-btn-pick-disabled);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn--next {
+  background: var(--color-btn-next);
+  color: #fff;
+  width: 100%;
+  font-size: 1.05rem;
+}
+.btn--next:hover { background: var(--color-btn-next-hover); }
+
+.btn--reset {
+  background: var(--color-btn-reset);
+  color: #fff;
+  width: 100%;
+  font-size: 0.9rem;
+}
+.btn--reset:hover { background: var(--color-btn-reset-hover); }
+
+/* ---- Thinking animation ---- */
+.thinking {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 0.95rem;
+  padding: 0.5rem;
+}
+
+.thinking-dots::after {
+  content: '';
+  animation: dots 1.2s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 100% { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* ============================================================
+   Statistics
+   ============================================================ */
+.stats {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.stats-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  border-bottom: 2px solid var(--color-bg);
+  padding-bottom: 0.4rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.stats-section-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.stats-table th {
+  font-weight: 600;
+  border-bottom: 1px solid #eee;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.stats-table td:last-child {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* ============================================================
+   Legend
+   ============================================================ */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  align-items: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 580px) {
+  .app-main { flex-direction: column; }
+  .board { min-width: unset; width: 100%; }
+  .sticky { width: 36px; height: 36px; font-size: 1.1rem; }
+  .btn--pick { padding: 0.5rem 0.7rem; font-size: 0.9rem; }
+}
